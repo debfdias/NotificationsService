@@ -1,3 +1,4 @@
+import { randomUUID } from 'crypto';
 import { Content } from './content';
 
 export interface NotificationProps {
@@ -5,13 +6,16 @@ export interface NotificationProps {
   content: Content;
   category: string;
   readAt?: Date | null;
+  canceledAt?: Date | null;
   createdAt: Date;
 }
 
 export class Notification {
+  public _id: string;
   private props: NotificationProps;
 
-  constructor(props: NotificationProps) {
+  constructor(props: NotificationProps, id?: string) {
+    this._id = id ?? randomUUID();
     this.props = props;
   }
 
@@ -39,15 +43,27 @@ export class Notification {
     return this.props.category;
   }
 
-  public set readAt(readAt: Date | null | undefined) {
-    this.props.readAt = readAt;
+  public read() {
+    this.props.readAt = new Date();
+  }
+
+  public unread() {
+    this.props.readAt = null;
   }
 
   public get readAt(): Date | null | undefined {
     return this.props.readAt;
   }
 
+  public cancel() {
+    this.props.canceledAt = new Date();
+  }
+
   public get createdAt(): Date {
     return this.props.createdAt;
+  }
+
+  public get canceledAt(): Date | null | undefined {
+    return this.props.canceledAt;
   }
 }

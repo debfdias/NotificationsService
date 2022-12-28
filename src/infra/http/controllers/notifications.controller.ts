@@ -1,4 +1,5 @@
 import { Body, Controller, Post } from '@nestjs/common';
+import { randomUUID } from 'crypto';
 import { SendNotification } from 'src/app/use-cases/send-notification';
 import { CreateNotificationBody } from '../dto/create-notification-body';
 
@@ -16,6 +17,13 @@ export class NotificationsController {
       category,
     });
 
-    return { notification };
+    return {
+      notification: {
+        id: randomUUID(),
+        content: notification.content.value,
+        category: notification.category,
+        recipientId: notification.recipientId,
+      },
+    };
   }
 }
